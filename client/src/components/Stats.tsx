@@ -1,0 +1,31 @@
+import { motion } from 'framer-motion';
+import { stats } from '../data/content';
+import { blurUp, staggerContainer, viewport } from '../lib/motion';
+import { CountUp } from './CountUp';
+
+export function Stats() {
+  return (
+    <section className="border-y border-border bg-surface">
+      <motion.div
+        className="mx-auto grid max-w-6xl grid-cols-2 divide-x divide-border sm:grid-cols-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewport}
+        variants={staggerContainer(0.15)}
+      >
+        {stats.map((stat) => (
+          <motion.div
+            key={stat.label}
+            variants={blurUp}
+            className="flex flex-col items-center justify-center px-4 py-12 text-center sm:py-16"
+          >
+            <p className="font-display text-4xl font-medium text-ink sm:text-5xl">
+              <CountUp value={stat.value} suffix={stat.suffix} />
+            </p>
+            <p className="mt-2 text-xs uppercase tracking-[0.2em] text-muted">{stat.label}</p>
+          </motion.div>
+        ))}
+      </motion.div>
+    </section>
+  );
+}
