@@ -83,9 +83,6 @@ export function ProjectsPinned() {
           invalidateOnRefresh: true,
           onRefresh: measureLayout,
           onUpdate: (self) => updateProgress(self.progress),
-          onToggle: (self) => {
-            document.documentElement.classList.toggle('projects-pin-active', self.isActive);
-          },
         },
       });
 
@@ -114,7 +111,6 @@ export function ProjectsPinned() {
         window.removeEventListener('resize', scheduleRefresh);
         window.removeEventListener('load', refreshLayout);
         navObserver?.disconnect();
-        document.documentElement.classList.remove('projects-pin-active');
         tween.scrollTrigger?.kill();
         tween.kill();
       };

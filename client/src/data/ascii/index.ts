@@ -7,6 +7,6 @@ import { ascii05 } from './arts/ascii-05';
 
 /**
  * Drop new ASCII files in `arts/` and add them here.
- * On each refresh, pieces are shuffled into random slots across the page.
+ * On each refresh, all five pieces shuffle into the five slots across the page.
  */
 export const asciiArts: AsciiArt[] = [portrait01, ascii02, ascii03, ascii04, ascii05];

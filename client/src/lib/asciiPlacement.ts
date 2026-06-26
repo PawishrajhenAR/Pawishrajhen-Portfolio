@@ -9,15 +9,16 @@ function shuffle<T>(items: T[]): T[] {
   return next;
 }
 
-/** Pair shuffled arts with shuffled slots — new layout every page load. */
+/** Pair shuffled arts with shuffled slots — one piece per slot, new layout every page load. */
 export function buildAsciiPlacement(arts: AsciiArt[]): Map<AsciiSlotId, AsciiArt> {
+  if (arts.length === 0) return new Map();
+
   const slots = shuffle([...ASCII_SLOT_IDS]);
   const pool = shuffle([...arts]);
-  const count = Math.min(slots.length, pool.length);
   const placement = new Map<AsciiSlotId, AsciiArt>();
 
-  for (let i = 0; i < count; i += 1) {
-    placement.set(slots[i], pool[i]);
+  for (let i = 0; i < slots.length; i += 1) {
+    placement.set(slots[i], pool[i % pool.length]);
   }
 
   return placement;

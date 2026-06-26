@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react';
 import { CheckCircle, Loader2 } from 'lucide-react';
 import { site } from '../data/content';
 import { AsciiSlot } from './AsciiSlot';
+import { EmailLink } from './EmailLink';
 import { Eyebrow } from './PageFrame';
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
@@ -50,31 +51,31 @@ export function Contact() {
   return (
     <section id="contact" className="border-b border-border">
       <div className="box-grid lg:grid-cols-2">
-        <div className="box-cell border-b border-border lg:border-b-0 lg:border-r">
-          <Eyebrow>Contact</Eyebrow>
-          <h2 className="section-title mt-3">Want to talk?</h2>
-          <p className="mt-4 max-w-sm text-[0.9rem] leading-relaxed text-ink-soft">
-            Internships, research, freelance, or just a question about a project — I read
-            everything and usually reply within a day or two.
-          </p>
+        <div className="box-cell flex flex-col border-b border-border lg:border-b-0 lg:border-r">
+          <div>
+            <Eyebrow>Contact</Eyebrow>
+            <h2 className="section-title mt-3">Want to talk?</h2>
+            <p className="mt-4 max-w-sm text-[0.9rem] leading-relaxed text-ink-soft">
+              Internships, research, freelance, or just a question about a project — I read
+              everything and usually reply within a day or two.
+            </p>
 
-          <a href={`mailto:${site.email}`} className="link-underline mt-8 inline-block text-[1rem]">
-            {site.email}
-          </a>
+            <EmailLink className="mt-8" />
 
-          <div className="mt-6 flex gap-5 text-[0.85rem]">
-            <a href={site.social.github} target="_blank" rel="noopener noreferrer" className="text-ink-soft hover:text-ink">
-              GitHub
-            </a>
-            <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-ink-soft hover:text-ink">
-              LinkedIn
-            </a>
-            <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="text-ink-soft hover:text-ink">
-              Instagram
-            </a>
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[0.85rem]">
+              <a href={site.social.github} target="_blank" rel="noopener noreferrer" className="text-ink-soft hover:text-ink">
+                GitHub
+              </a>
+              <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-ink-soft hover:text-ink">
+                LinkedIn
+              </a>
+              <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="text-ink-soft hover:text-ink">
+                Instagram
+              </a>
+            </div>
           </div>
 
-          <AsciiSlot slot="contact-aside" className="mt-10 flex items-center justify-center" />
+          <AsciiSlot slot="contact-aside" className="mt-10 flex items-center justify-center lg:mt-auto lg:pt-10" />
         </div>
 
         <div className="box-cell-dark">

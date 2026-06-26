@@ -6,8 +6,31 @@ export function Experience() {
   return (
     <section id="experience" className="border-b border-border">
       <div className="box-cell border-b border-border">
-        <Eyebrow>Timeline</Eyebrow>
-        <h2 className="section-title mt-3">How I got here</h2>
+        <Eyebrow>Experience</Eyebrow>
+        <h2 className="section-title mt-3">Work that&apos;s shipped</h2>
+        <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-ink-soft">
+          Everything here is work shipped through KatalyzU since 2025 — where I work as technical
+          lead — from katalyzu.com to client builds like Skanda and The Fuel Depot.
+        </p>
+      </div>
+
+      <div className="box-cell-dark flex items-center justify-center border-b border-border px-5 py-8 sm:px-7 sm:py-10">
+        <a
+          href="https://katalyzu.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex max-w-full items-center gap-3 transition-opacity hover:opacity-80 sm:gap-4"
+        >
+          <img
+            src="/companylogo/KatalyzU.svg"
+            alt=""
+            aria-hidden
+            className="experience-brand-logo"
+          />
+          <span className="experience-brand-name font-display tracking-[-0.02em] text-ink">
+            KatalyzU
+          </span>
+        </a>
       </div>
 
       {experience.map((item, i) => (
@@ -18,15 +41,43 @@ export function Experience() {
           <div className="box-cell-dark hidden items-start border-r border-border py-6 lg:flex">
             <span className="font-display text-2xl text-cream-deep">{i + 1}</span>
           </div>
+
           <div className="box-cell border-b border-border py-6 lg:border-b-0 lg:border-r">
             <p className="text-[0.8rem] text-muted">{item.period}</p>
             <p className="mt-1 text-[0.85rem] text-ink-soft">{item.type}</p>
           </div>
+
           <div className="box-cell py-6">
             <h3 className="font-display text-xl text-ink">{item.title}</h3>
-            <p className="mt-1 text-[0.85rem] text-muted">{item.org}</p>
+            {item.orgUrl ? (
+              <a
+                href={item.orgUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 inline-block text-[0.85rem] text-muted link-underline"
+              >
+                {item.org}
+              </a>
+            ) : (
+              <p className="mt-1 text-[0.85rem] text-muted">{item.org}</p>
+            )}
+
             <p className="mt-3 text-[0.9rem] leading-relaxed text-ink-soft">{item.description}</p>
-            <p className="mt-3 text-[0.8rem] text-muted">{item.tags.join(' · ')}</p>
+
+            {item.highlights && item.highlights.length > 0 && (
+              <ul className="mt-4 space-y-2 border border-border bg-surface/35 p-4 backdrop-blur-sm">
+                {item.highlights.map((point) => (
+                  <li
+                    key={point}
+                    className="flex gap-2.5 text-[0.85rem] leading-relaxed text-ink-soft before:mt-[0.55rem] before:h-1 before:w-1 before:shrink-0 before:rounded-full before:bg-rust/70 before:content-['']"
+                  >
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <p className="mt-4 text-[0.8rem] text-muted">{item.tags.join(' · ')}</p>
           </div>
         </div>
       ))}

@@ -1,5 +1,4 @@
 import { skillGroups } from '../data/content';
-import { AsciiSlot } from './AsciiSlot';
 import { Eyebrow } from './PageFrame';
 
 export function Skills() {
@@ -9,12 +8,9 @@ export function Skills() {
         <Eyebrow>Skills</Eyebrow>
         <h2 className="section-title mt-3">What I reach for</h2>
         <p className="mt-3 max-w-md text-[0.9rem] text-ink-soft">
-          Depends on the project — but this covers most of what I use week to week.
+          Agents, automations, classical ML, and research — whatever the problem needs this
+          week.
         </p>
-      </div>
-
-      <div className="box-cell-dark flex items-center justify-center border-t border-border py-10">
-        <AsciiSlot slot="skills-foot" className="flex w-full items-center justify-center" />
       </div>
 
       <div className="box-grid sm:grid-cols-2 lg:grid-cols-3">
