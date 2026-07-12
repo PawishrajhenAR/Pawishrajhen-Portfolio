@@ -77,6 +77,42 @@ export function Experience() {
               </ul>
             )}
 
+            {item.caseStudy && (
+              <details className="experience-case-study mt-5 border border-border bg-surface/35">
+                <summary className="cursor-pointer px-4 py-3 text-[0.85rem] font-medium text-ink transition hover:text-rust">
+                  Read case study
+                </summary>
+                <div className="space-y-4 border-t border-border px-4 py-4 text-[0.85rem] leading-relaxed text-ink-soft">
+                  <div>
+                    <p className="text-[0.75rem] font-medium uppercase tracking-[0.12em] text-muted">
+                      Problem
+                    </p>
+                    <p className="mt-2">{item.caseStudy.problem}</p>
+                  </div>
+                  <div>
+                    <p className="text-[0.75rem] font-medium uppercase tracking-[0.12em] text-muted">
+                      Approach
+                    </p>
+                    <p className="mt-2">{item.caseStudy.approach}</p>
+                  </div>
+                  <div>
+                    <p className="text-[0.75rem] font-medium uppercase tracking-[0.12em] text-muted">
+                      Outcome
+                    </p>
+                    <p className="mt-2">{item.caseStudy.outcome}</p>
+                  </div>
+                  <div>
+                    <p className="text-[0.75rem] font-medium uppercase tracking-[0.12em] text-muted">
+                      Stack
+                    </p>
+                    <p className="mt-2 font-mono text-[0.8rem] text-ink">
+                      {item.caseStudy.stack.join(' · ')}
+                    </p>
+                  </div>
+                </div>
+              </details>
+            )}
+
             <p className="mt-4 text-[0.8rem] text-muted">{item.tags.join(' · ')}</p>
           </div>
         </div>

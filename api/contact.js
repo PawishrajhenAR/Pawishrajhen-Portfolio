@@ -1,18 +1,5 @@
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function parseContact(body) {
-  if (!body || typeof body !== 'object') return null;
-
-  const name = String(body.name ?? '').trim();
-  const email = String(body.email ?? '').trim();
-  const message = String(body.message ?? '').trim();
-
-  if (name.length < 2 || name.length > 100) return null;
-  if (!EMAIL_RE.test(email) || email.length > 254) return null;
-  if (message.length < 10 || message.length > 2000) return null;
-
-  return { name, email, message };
-}
+import { parseContact } from '../lib/contact.js';
+import { sendContactEmail } from '../lib/sendContactEmail.js';
 
 function setCors(req, res) {
   const allowed = process.env.CLIENT_ORIGIN;
@@ -28,7 +15,7 @@ function setCors(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   setCors(req, res);
 
   if (req.method === 'OPTIONS') {
@@ -49,14 +36,18 @@ export default function handler(req, res) {
 
   const { name, email, message } = parsed;
 
-  console.log('\n--- New contact submission ---');
-  console.log(`From: ${name} <${email}>`);
-  console.log(`Message: ${message}`);
-  console.log(`Time: ${new Date().toISOString()}`);
-  console.log('------------------------------\n');
+  try {
+    await sendContactEmail({ name, email, message });
 
-  return res.status(200).json({
-    success: true,
-    message: 'Your message has been received. Thank you!',
-  });
+    return res.status(200).json({
+      success: true,
+      message: 'Your message has been received. Thank you!',
+    });
+  } catch (err) {
+    console.error('Contact email failed:', err);
+
+    return res.status(500).json({
+      error: 'Could not send your message. Please try again or email directly.',
+    });
+  }
 }

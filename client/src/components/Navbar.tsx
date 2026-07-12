@@ -39,10 +39,10 @@ export function Navbar() {
   return (
     <header
       data-site-nav
-      className={`sticky top-0 z-[100] border-b transition-colors duration-300 ${
+      className={`sticky top-0 z-[100] border-b transition-[background-color,border-color,box-shadow] duration-300 ${
         scrolled || open
-          ? 'border-border bg-surface/90 backdrop-blur-md'
-          : 'border-transparent bg-surface/75 backdrop-blur-md'
+          ? 'border-border bg-surface/95 shadow-[0_8px_24px_rgb(28_26_23/0.06)] backdrop-blur-md'
+          : 'border-transparent bg-surface/80 backdrop-blur-md'
       }`}
     >
       <div className="box-grid sm:grid-cols-[1fr_auto]">

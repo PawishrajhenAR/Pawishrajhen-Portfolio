@@ -1,5 +1,6 @@
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { revealVariants, type RevealVariant, viewport } from '../lib/motion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 type ScrollRevealProps = HTMLMotionProps<'div'> & {
   variant?: RevealVariant;
@@ -14,6 +15,12 @@ export function ScrollReveal({
   eager = false,
   ...props
 }: ScrollRevealProps) {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <div className={props.className}>{children as React.ReactNode}</div>;
+  }
+
   return (
     <motion.div
       initial="hidden"
@@ -39,6 +46,12 @@ export function ScrollStagger({
   delay?: number;
   className?: string;
 }) {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       className={className}
@@ -67,6 +80,12 @@ export function TextReveal({
   as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
   stagger?: number;
 }) {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <Tag className={className}>{text}</Tag>;
+  }
+
   const words = text.split(' ');
 
   return (

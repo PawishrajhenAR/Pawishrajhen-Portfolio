@@ -38,6 +38,7 @@
     @apply bg-cream font-body text-ink;
     font-feature-settings: "kern" 1, "liga" 1;
     overflow-x: clip;
+    letter-spacing: 0.01em;
   }
 
   ::selection {
@@ -59,11 +60,11 @@
   }
 
   .section-eyebrow {
-    @apply text-[0.8rem] font-medium text-muted;
+    @apply text-[0.78rem] font-medium uppercase tracking-[0.14em] text-rust;
   }
 
   .section-title {
-    @apply font-display text-[2rem] font-normal leading-[1.15] tracking-[-0.02em] text-ink sm:text-[2.75rem] lg:text-[3.25rem];
+    @apply font-display text-[2rem] font-normal leading-[1.12] tracking-[-0.025em] text-ink sm:text-[2.75rem] lg:text-[3.25rem];
   }
 
   .experience-brand-logo {
@@ -97,7 +98,10 @@
 
   .page-frame {
     /* No backdrop-filter here — it creates a containing block and breaks GSAP pin */
-    @apply relative border border-border-strong bg-surface/85;
+    @apply relative border border-border-strong bg-surface/92;
+    box-shadow:
+      0 1px 0 rgb(28 26 23 / 0.04),
+      0 20px 50px rgb(28 26 23 / 0.05);
   }
 
   .box-grid {
@@ -105,15 +109,15 @@
   }
 
   .box-cell {
-    @apply border border-border bg-surface/78 p-5 backdrop-blur-md sm:p-6 lg:p-7;
+    @apply border border-border bg-surface/88 p-5 backdrop-blur-md sm:p-6 lg:p-7;
   }
 
   .box-cell-dark {
-    @apply border border-border bg-cream/55 p-5 backdrop-blur-md sm:p-6 lg:p-7;
+    @apply border border-border bg-cream-dark/75 p-5 backdrop-blur-md sm:p-6 lg:p-7;
   }
 
   .tag {
-    @apply inline-block border border-border bg-surface/40 px-2.5 py-1 text-[0.8rem] text-ink-soft backdrop-blur-sm transition-colors hover:border-rust/40 hover:text-ink;
+    @apply inline-block border border-border bg-surface/55 px-2.5 py-1 text-[0.8rem] text-ink-soft backdrop-blur-sm transition-colors hover:border-rust/50 hover:bg-surface hover:text-ink;
   }
 
   .split-name {
@@ -148,17 +152,19 @@
   }
 
   .hero-main-fill {
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
     display: flex;
-    flex: 1;
+    flex: 0 0 auto;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: flex-start;
     min-height: 0;
   }
 
   @media (min-width: 1024px) {
     .hero-main-fill {
       margin-top: 1.75rem;
+      flex: 1;
+      justify-content: flex-end;
     }
   }
 
@@ -168,8 +174,9 @@
     width: 100%;
     max-height: 100%;
     border: 1px solid var(--color-border);
-    background: rgb(244 240 233 / 0.45);
-    backdrop-filter: blur(6px);
+    background: rgb(244 240 233 / 0.72);
+    backdrop-filter: blur(8px);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5);
   }
 
   .hero-agent-loop__chrome {
@@ -304,7 +311,7 @@
   }
 
   .link-underline {
-    @apply text-ink underline decoration-rust/40 underline-offset-[5px] transition hover:decoration-rust;
+    @apply text-ink underline decoration-rust/45 underline-offset-[5px] transition hover:decoration-rust hover:text-rust;
   }
 
   .ascii-art {
@@ -475,12 +482,24 @@
     }
   }
 
+  .experience-case-study summary {
+    list-style: none;
+  }
+
+  .experience-case-study summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .experience-case-study[open] summary {
+    @apply border-b border-border text-rust;
+  }
+
   .btn-primary {
-    @apply inline-flex items-center gap-2 bg-ink px-5 py-2.5 text-[0.85rem] font-medium text-cream transition hover:bg-rust;
+    @apply inline-flex items-center gap-2 border border-ink bg-ink px-5 py-2.5 text-[0.85rem] font-medium text-cream transition hover:border-rust hover:bg-rust;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 text-[0.85rem] font-medium text-ink-soft transition hover:text-ink;
+    @apply inline-flex items-center gap-2 border border-transparent px-5 py-2.5 text-[0.85rem] font-medium text-ink-soft transition hover:border-border hover:bg-surface/80 hover:text-ink;
   }
 
   .mobile-nav-toggle {
@@ -510,11 +529,11 @@
   }
 
   .projects-pin .box-cell-pinned.box-cell {
-    @apply bg-surface/95;
+    @apply bg-surface/98;
   }
 
   .projects-pin .box-cell-pinned.box-cell-dark {
-    @apply bg-cream/88;
+    @apply bg-cream-dark/92;
   }
 
   .projects-pin .tag-pinned {
@@ -552,7 +571,7 @@
     align-items: center;
     gap: 0.65rem;
     border: 1px solid var(--color-border);
-    background: rgb(244 240 233 / 0.55);
+    background: rgb(244 240 233 / 0.65);
     padding: 0.65rem 0.85rem;
   }
 
@@ -580,12 +599,12 @@
     border: 1px solid var(--color-border);
     border-bottom: none;
     padding: 0.85rem 1rem;
-    background: rgb(244 240 233 / 0.35);
+    background: rgb(244 240 233 / 0.45);
     transition: background-color 0.15s, border-color 0.15s;
   }
 
   .blog-topic-card:hover {
-    background: rgb(244 240 233 / 0.65);
+    background: rgb(244 240 233 / 0.85);
     border-color: rgb(163 81 58 / 0.25);
   }
 
@@ -613,7 +632,7 @@
 
   .blog-tldr {
     border: 1px solid var(--color-border);
-    background: rgb(237 232 223 / 0.55);
+    background: rgb(237 232 223 / 0.65);
     padding: 1rem 1.1rem;
   }
 
@@ -734,16 +753,17 @@
     gap: 0.45rem;
     margin-top: 0.65rem;
     border: 1px solid var(--color-border);
-    background: rgb(244 240 233 / 0.5);
+    background: rgb(244 240 233 / 0.55);
     padding: 0.45rem 0.75rem;
     font-size: 0.82rem;
     color: var(--color-ink);
     touch-action: manipulation;
-    transition: border-color 0.15s, color 0.15s;
+    transition: border-color 0.15s, color 0.15s, background-color 0.15s;
   }
 
   .blog-share__btn:hover {
     border-color: rgb(163 81 58 / 0.35);
+    background: rgb(244 240 233 / 0.9);
     color: var(--color-rust);
   }
 

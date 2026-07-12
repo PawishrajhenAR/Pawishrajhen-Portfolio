@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useInView } from 'framer-motion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { viewport } from '../lib/motion';
 
 type CountUpProps = {
@@ -12,9 +13,15 @@ type CountUpProps = {
 export function CountUp({ value, suffix = '', duration = 1.8, className }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, viewport);
-  const [count, setCount] = useState(0);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [count, setCount] = useState(prefersReducedMotion ? value : 0);
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      setCount(value);
+      return;
+    }
+
     if (!inView) return;
 
     let start = 0;
@@ -35,7 +42,7 @@ export function CountUp({ value, suffix = '', duration = 1.8, className }: Count
     }
 
     requestAnimationFrame(tick);
-  }, [inView, value, duration]);
+  }, [inView, value, duration, prefersReducedMotion]);
 
   return (
     <span ref={ref} className={className}>

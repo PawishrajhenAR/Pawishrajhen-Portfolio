@@ -1,4 +1,5 @@
-import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowDown, ExternalLink, FileText, Github, Linkedin, Mail, PenLine } from 'lucide-react';
 import { site } from '../data/content';
 import { portfolioMailto } from '../lib/mailto';
 import { handleAnchorClick } from '../lib/smoothScroll';
@@ -8,12 +9,12 @@ import { HeroAgentLoop } from './HeroAgentLoop';
 import { Eyebrow } from './PageFrame';
 
 const interests = [
-  'agents',
-  'automations',
-  'agent loops',
-  'MCP',
-  'AI skills',
-  'full-stack',
+  'shipping agent loops in production',
+  'MCP integrations',
+  'tool orchestration',
+  'eval gates',
+  'client delivery at KatalyzU',
+  'full-stack handoffs',
 ];
 
 export function Hero() {
@@ -34,24 +35,38 @@ export function Hero() {
           <div className="hero-main-top">
             <h1 className="split-name">
               <span className="block">{site.nameLines[0]}</span>
-              <span className="block text-muted">{site.nameLines[1]}</span>
+              <span className="block text-rust/80">{site.nameLines[1]}</span>
             </h1>
 
             <p className="mt-4 max-w-md text-[1rem] leading-relaxed text-ink-soft sm:mt-5 lg:max-w-xl lg:text-[1.05rem]">
               {site.tagline}
             </p>
-
-            <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-7">
-              <a href="#projects" className="btn-primary" onClick={handleAnchorClick}>
-                See my work
-                <ArrowDown size={14} />
-              </a>
-              <EmailLink variant="button" subject="sayHi" />
-            </div>
           </div>
 
           <div className="hero-main-fill">
             <HeroAgentLoop />
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center gap-2.5 sm:mt-7 sm:gap-3">
+            <a href="#projects" className="btn-primary" onClick={handleAnchorClick}>
+              See my work
+              <ArrowDown size={14} />
+            </a>
+            <Link to="/blog" className="btn-ghost">
+              <PenLine size={14} />
+              Read the blog
+            </Link>
+            <a
+              href={site.resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost"
+            >
+              <FileText size={14} />
+              View resume
+              <ExternalLink size={12} className="opacity-50" />
+            </a>
+            <EmailLink variant="button" subject="sayHi" />
           </div>
         </div>
 

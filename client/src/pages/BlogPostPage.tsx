@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { BlogPostBody, getHeadings } from '../components/BlogPostBody';
@@ -7,6 +8,7 @@ import { BlogShare } from '../components/BlogShare';
 import { BlogToc } from '../components/BlogToc';
 import { BlogAudience, BlogTldr } from '../components/BlogTldr';
 import { Footer } from '../components/Footer';
+import { JsonLd } from '../components/JsonLd';
 import { Navbar } from '../components/Navbar';
 import { Eyebrow } from '../components/PageFrame';
 import { PageFrame } from '../components/PageFrame';
@@ -16,12 +18,43 @@ import {
   getPostBySlug,
   getRelatedPosts,
 } from '../data/blog';
+import { site } from '../data/content';
+import { usePageMeta } from '../hooks/usePageMeta';
+import { DEFAULT_OG_IMAGE, absoluteUrl } from '../lib/seo';
 import { useScrollToTop } from '../hooks/useScrollToTop';
 
 export function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
   const post = slug ? getPostBySlug(slug) : undefined;
   useScrollToTop();
+
+  usePageMeta({
+    title: post ? `${post.title} — ${site.name}` : `Blog — ${site.name}`,
+    description: post?.excerpt ?? 'Essays on agents, MCP, evals, and shipping autonomous systems.',
+    image: DEFAULT_OG_IMAGE,
+    path: post ? `/blog/${post.slug}` : '/blog',
+    type: post ? 'article' : 'website',
+    publishedTime: post?.date,
+  });
+
+  const structuredData = useMemo(() => {
+    if (!post) return null;
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: post.title,
+      description: post.excerpt,
+      datePublished: post.date,
+      author: {
+        '@type': 'Person',
+        name: site.name,
+        url: site.url,
+      },
+      url: absoluteUrl(`/blog/${post.slug}`),
+      image: DEFAULT_OG_IMAGE,
+    };
+  }, [post]);
 
   if (!post) {
     return <Navigate to="/blog" replace />;
@@ -33,6 +66,7 @@ export function BlogPostPage() {
 
   return (
     <div className="relative min-h-screen text-ink">
+      {structuredData && <JsonLd data={structuredData} />}
       <BlogReadingProgress />
       <PageFrame>
         <Navbar />

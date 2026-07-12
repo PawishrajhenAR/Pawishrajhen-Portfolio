@@ -7,10 +7,10 @@ import { Eyebrow } from './PageFrame';
 function PaperLink({ paper }: { paper: ResearchPaper }) {
   const [showNotice, setShowNotice] = useState(false);
 
-  if (paper.status === 'published' && paper.doi) {
+  if (paper.status === 'published' && (paper.doi || paper.paperUrl)) {
     return (
       <a
-        href={paper.doi}
+        href={paper.doi ?? paper.paperUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="link-underline mt-8 inline-flex items-center gap-1.5 text-[0.85rem]"
@@ -47,8 +47,8 @@ export function Research() {
         <Eyebrow>Research</Eyebrow>
         <h2 className="section-title mt-3">Papers</h2>
         <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-ink-soft">
-          Published work and manuscripts in review — assistive AR, climate forecasting, and
-          on-device deep learning for healthcare.
+          Published work on assistive AR, climate forecasting, and on-device deep learning for
+          healthcare.
         </p>
       </div>
 
@@ -72,6 +72,10 @@ export function Research() {
             </h3>
 
             <p className="mt-6 text-[0.9rem] leading-[1.8] text-ink-soft">{paper.summary}</p>
+
+            <p className="mt-4 border-l-2 border-rust/55 pl-4 text-[0.88rem] leading-relaxed text-ink-soft">
+              {paper.engineeringAngle}
+            </p>
 
             <p className="mt-5 text-[0.8rem] text-muted">{paper.tools.join(' · ')}</p>
 

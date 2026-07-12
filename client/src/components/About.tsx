@@ -1,7 +1,6 @@
-import { about, stats } from '../data/content';
+import { about } from '../data/content';
 import { AsciiSlot } from './AsciiSlot';
 import { Eyebrow } from './PageFrame';
-import { CountUp } from './CountUp';
 
 export function About() {
   return (
@@ -34,20 +33,6 @@ export function About() {
             ))}
           </dl>
         </div>
-      </div>
-
-      <div className="box-grid grid-cols-2 border-t border-border sm:grid-cols-4">
-        {stats.map((stat, i) => (
-          <div
-            key={stat.label}
-            className={`box-cell py-8 text-center ${i < stats.length - 1 ? 'border-r border-border' : ''}`}
-          >
-            <p className="font-display text-3xl text-ink sm:text-4xl">
-              <CountUp value={stat.value} suffix={stat.suffix} />
-            </p>
-            <p className="mt-2 text-[0.8rem] text-muted">{stat.label}</p>
-          </div>
-        ))}
       </div>
     </section>
   );

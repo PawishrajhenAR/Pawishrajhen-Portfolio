@@ -13,6 +13,8 @@ import {
 } from '../data/blog';
 import { site } from '../data/content';
 import { portfolioMailto } from '../lib/mailto';
+import { usePageMeta } from '../hooks/usePageMeta';
+import { DEFAULT_OG_IMAGE } from '../lib/seo';
 import { BlogAudience, BlogTldr } from '../components/BlogTldr';
 import { Footer } from '../components/Footer';
 import { Navbar } from '../components/Navbar';
@@ -44,6 +46,14 @@ function TagList({ tags }: { tags: string[] }) {
 
 export function BlogPage() {
   useScrollToTop();
+
+  usePageMeta({
+    title: `Blog — ${site.name}`,
+    description: 'Essays on agents, MCP, evals, and shipping autonomous systems that actually stop.',
+    image: DEFAULT_OG_IMAGE,
+    path: '/blog',
+  });
+
   const [searchParams, setSearchParams] = useSearchParams();
   const tagParam = searchParams.get('tag') as BlogTag | null;
   const initialTag = tagParam && blogTags.includes(tagParam) ? tagParam : 'all';
