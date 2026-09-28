@@ -34,7 +34,7 @@ This repo is configured for [Vercel](https://vercel.com):
    | Variable | Example |
    |----------|---------|
    | `RESEND_API_KEY` | `re_xxxxxxxx` (from [resend.com](https://resend.com)) |
-   | `CONTACT_TO_EMAIL` | `pawishgpt@gmail.com` |
+   | `CONTACT_TO_EMAIL` | `pawishinuk@gmail.com` |
    | `CONTACT_FROM_EMAIL` | `Portfolio <portfolio@yourdomain.com>` |
    | `CLIENT_ORIGIN` | `https://your-domain.vercel.app` |
 

@@ -6,7 +6,7 @@ export const site = {
   title: 'AI developer & engineer',
   tagline:
     'I build autonomous agents, automations, and full-stack AI products — agent loops, tool use, skills, and UIs that actually ship.',
-  email: 'pawishgpt@gmail.com',
+  email: 'pawishinuk@gmail.com',
   resumeUrl: '/resume.pdf',
   social: {
     github: 'https://github.com/PawishrajhenAR',
