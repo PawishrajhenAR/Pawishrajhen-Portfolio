@@ -354,9 +354,14 @@ export function getAdjacentPosts(slug: string): {
 }
 
 export function formatBlogDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', {
+  // Treat YYYY-MM-DD as a calendar date in UTC to avoid off-by-one in western timezones.
+  const [year, month, day] = iso.split('-').map(Number);
+  if (!year || !month || !day) return iso;
+
+  return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
+    timeZone: 'UTC',
   });
 }

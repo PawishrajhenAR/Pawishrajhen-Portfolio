@@ -1,22 +1,10 @@
-import { useMemo, useRef } from 'react';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useMemo } from 'react';
 import { ExternalLink, Github } from 'lucide-react';
 import type { Project } from '../data/projects';
 import { projects } from '../data/content';
-import { useMediaQuery } from '../hooks/useMediaQuery';
-import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { pickRandomProjectIndex } from '../lib/projectAscii';
 import { Eyebrow } from './PageFrame';
 import { ProjectAsciiAccent } from './ProjectAsciiAccent';
-
-gsap.registerPlugin(ScrollTrigger);
-
-ScrollTrigger.config({
-  limitCallbacks: true,
-  ignoreMobileResize: true,
-});
 
 const categoryLabels: Record<string, string> = {
   ai: 'AI',
@@ -26,32 +14,20 @@ const categoryLabels: Record<string, string> = {
   research: 'Research',
 };
 
-function getNavHeight() {
-  const nav = document.querySelector('[data-site-nav]');
-  return nav instanceof HTMLElement ? nav.offsetHeight : 0;
-}
-
 type ProjectPanelProps = {
   project: Project;
   index: number;
   asciiProjectIndex: number;
-  compact?: boolean;
 };
 
-function ProjectPanel({ project, index, asciiProjectIndex, compact = false }: ProjectPanelProps) {
+function ProjectPanel({ project, index, asciiProjectIndex }: ProjectPanelProps) {
   return (
-    <div
-      className={`box-grid h-full ${compact ? 'grid-rows-[auto_1fr_auto]' : 'grid-rows-[1fr_auto] lg:grid-rows-1 lg:grid-cols-[4rem_1fr_10.5rem]'}`}
-    >
-      <div
-        className={`box-cell-dark ${compact ? 'box-cell' : 'box-cell-pinned'} flex items-start border-b border-border lg:border-b-0 lg:border-r`}
-      >
+    <div className="box-grid md:grid-cols-[3.5rem_minmax(0,1fr)_12rem]">
+      <div className="box-cell-dark flex items-start border-b border-border md:border-b-0 md:border-r">
         <span className="font-display text-2xl text-cream-deep">{index + 1}</span>
       </div>
 
-      <div
-        className={`box-cell ${compact ? '' : 'box-cell-pinned'} overflow-y-auto border-b border-border lg:border-b-0 lg:border-r`}
-      >
+      <div className="box-cell border-b border-border md:border-b-0 md:border-r">
         <p className="text-[0.8rem] text-muted">
           {categoryLabels[project.category]}
           {project.note && <span className="text-rust"> · {project.note}</span>}
@@ -79,7 +55,7 @@ function ProjectPanel({ project, index, asciiProjectIndex, compact = false }: Pr
           href={project.github}
           target="_blank"
           rel="noopener noreferrer"
-          className="link-underline mt-5 inline-flex items-center gap-1.5 text-[0.85rem] lg:hidden"
+          className="link-underline mt-5 inline-flex items-center gap-1.5 text-[0.85rem] md:hidden"
         >
           <Github size={14} strokeWidth={1.5} />
           View on GitHub
@@ -87,12 +63,10 @@ function ProjectPanel({ project, index, asciiProjectIndex, compact = false }: Pr
         </a>
       </div>
 
-      <div
-        className={`box-cell-dark ${compact ? 'box-cell' : 'box-cell-pinned'} flex min-h-0 flex-col justify-between gap-3`}
-      >
+      <div className="box-cell-dark flex flex-col gap-4">
         <div className="flex flex-wrap gap-1.5">
           {project.tags.map((tag) => (
-            <span key={tag} className="tag tag-pinned text-[0.72rem]">
+            <span key={tag} className="tag text-[0.72rem]">
               {tag}
             </span>
           ))}
@@ -101,7 +75,7 @@ function ProjectPanel({ project, index, asciiProjectIndex, compact = false }: Pr
           href={project.github}
           target="_blank"
           rel="noopener noreferrer"
-          className="link-underline mt-4 hidden items-center gap-1.5 text-[0.85rem] lg:inline-flex"
+          className="link-underline hidden items-center gap-1.5 text-[0.85rem] md:inline-flex"
         >
           <Github size={14} strokeWidth={1.5} />
           View on GitHub
@@ -112,12 +86,17 @@ function ProjectPanel({ project, index, asciiProjectIndex, compact = false }: Pr
   );
 }
 
-function ProjectsMobileList({ asciiProjectIndex }: { asciiProjectIndex: number }) {
+export function ProjectsPinned() {
+  const asciiProjectIndex = useMemo(() => pickRandomProjectIndex(projects.length), []);
+
   return (
     <section id="projects" className="border-b border-border bg-surface/95">
       <div className="box-cell border-b border-border">
         <Eyebrow>Selected work</Eyebrow>
         <h2 className="section-title mt-3">Things I&apos;ve built</h2>
+        <p className="mt-3 max-w-xl text-[0.9rem] leading-relaxed text-ink-soft">
+          A few builds I&apos;m proud of — scroll the page, open a repo, dig in.
+        </p>
       </div>
 
       {projects.map((project, i) => (
@@ -126,148 +105,9 @@ function ProjectsMobileList({ asciiProjectIndex }: { asciiProjectIndex: number }
             project={project}
             index={i}
             asciiProjectIndex={asciiProjectIndex}
-            compact
           />
         </article>
       ))}
     </section>
   );
-}
-
-function ProjectsPinnedDesktop() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const trackWrapRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLSpanElement>(null);
-  const asciiProjectIndex = useMemo(() => pickRandomProjectIndex(projects.length), []);
-
-  useGSAP(
-    () => {
-      const section = sectionRef.current;
-      const trackWrap = trackWrapRef.current;
-      const track = trackRef.current;
-      if (!section || !trackWrap || !track) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      const count = projects.length;
-      if (count === 0) return;
-
-      const layout = { navH: 0, step: 0, scrollDistance: 0 };
-      let lastIndex = 1;
-
-      const measureLayout = () => {
-        layout.navH = getNavHeight();
-        layout.step = trackWrap.offsetWidth;
-        layout.scrollDistance = layout.step * Math.max(count - 1, 1);
-        section.style.setProperty('--nav-h', `${layout.navH}px`);
-        section.style.height = `calc(100svh - ${layout.navH}px)`;
-        return layout;
-      };
-
-      const updateProgress = (progress: number) => {
-        if (!progressRef.current) return;
-        const index = Math.min(count, Math.max(1, Math.round(progress * (count - 1)) + 1));
-        if (index === lastIndex) return;
-        lastIndex = index;
-        progressRef.current.textContent = `${index} of ${count}`;
-      };
-
-      measureLayout();
-      gsap.set(track, { x: 0, force3D: true });
-
-      const tween = gsap.to(track, {
-        x: () => -layout.scrollDistance,
-        ease: 'none',
-        force3D: true,
-        roundProps: 'x',
-        scrollTrigger: {
-          trigger: section,
-          start: () => `top ${layout.navH}px`,
-          end: () => `+=${layout.scrollDistance}`,
-          pin: true,
-          pinSpacing: true,
-          scrub: 0.45,
-          invalidateOnRefresh: true,
-          onRefresh: measureLayout,
-          onUpdate: (self) => updateProgress(self.progress),
-        },
-      });
-
-      let resizeTimer: ReturnType<typeof setTimeout>;
-      const refreshLayout = () => {
-        measureLayout();
-        tween.scrollTrigger?.refresh();
-      };
-      const scheduleRefresh = () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(refreshLayout, 120);
-      };
-
-      window.addEventListener('resize', scheduleRefresh);
-      window.addEventListener('load', refreshLayout);
-      document.fonts?.ready?.then(refreshLayout);
-      requestAnimationFrame(() => requestAnimationFrame(refreshLayout));
-
-      const nav = document.querySelector('[data-site-nav]');
-      const navObserver =
-        nav instanceof HTMLElement ? new ResizeObserver(scheduleRefresh) : null;
-      navObserver?.observe(nav as HTMLElement);
-
-      return () => {
-        clearTimeout(resizeTimer);
-        window.removeEventListener('resize', scheduleRefresh);
-        window.removeEventListener('load', refreshLayout);
-        navObserver?.disconnect();
-        tween.scrollTrigger?.kill();
-        tween.kill();
-      };
-    },
-    { scope: sectionRef, dependencies: [] },
-  );
-
-  return (
-    <section
-      id="projects"
-      ref={sectionRef}
-      className="projects-pin relative z-10 flex flex-col overflow-hidden bg-surface/95"
-      style={{ height: 'calc(100svh - var(--nav-h, 3.25rem))' }}
-    >
-      <div className="box-grid shrink-0 border-b border-border lg:grid-cols-[1fr_auto]">
-        <div className="box-cell box-cell-pinned border-b border-border lg:border-b-0">
-          <Eyebrow>Selected work</Eyebrow>
-          <h2 className="section-title mt-3">Things I&apos;ve built</h2>
-        </div>
-        <div className="box-cell-dark box-cell-pinned flex items-end justify-end">
-          <span ref={progressRef} className="font-display text-xl text-ink">
-            1 of {projects.length}
-          </span>
-        </div>
-      </div>
-
-      <div ref={trackWrapRef} className="min-h-0 flex-1 overflow-hidden">
-        <div ref={trackRef} className="projects-track flex h-full">
-          {projects.map((project, i) => (
-            <article
-              key={project.id}
-              className="project-card h-full w-full shrink-0 grow-0 basis-full border-r border-border"
-            >
-              <ProjectPanel project={project} index={i} asciiProjectIndex={asciiProjectIndex} />
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function ProjectsPinned() {
-  const isDesktop = useMediaQuery('(min-width: 768px)');
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const asciiProjectIndex = useMemo(() => pickRandomProjectIndex(projects.length), []);
-
-  if (!isDesktop || prefersReducedMotion) {
-    return <ProjectsMobileList asciiProjectIndex={asciiProjectIndex} />;
-  }
-
-  return <ProjectsPinnedDesktop />;
 }

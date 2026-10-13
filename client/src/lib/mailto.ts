@@ -3,12 +3,43 @@ type MailtoOptions = {
   body?: string;
 };
 
+/**
+ * Build a mailto: URL. Uses encodeURIComponent so spaces stay as %20
+ * (URLSearchParams would turn them into "+", which many mail apps show literally).
+ */
 export function mailtoHref(email: string, options: MailtoOptions = {}): string {
-  const params = new URLSearchParams();
-  if (options.subject) params.set('subject', options.subject);
-  if (options.body) params.set('body', options.body);
-  const query = params.toString();
-  return query ? `mailto:${email}?${query}` : `mailto:${email}`;
+  const parts: string[] = [];
+  if (options.subject) {
+    parts.push(`subject=${encodeURIComponent(options.subject)}`);
+  }
+  if (options.body) {
+    parts.push(`body=${encodeURIComponent(options.body)}`);
+  }
+  return parts.length > 0 ? `mailto:${email}?${parts.join('&')}` : `mailto:${email}`;
+}
+
+export function contactMailto(
+  toEmail: string,
+  fields: { name: string; email: string; message: string },
+): string {
+  const name = fields.name.trim();
+  const from = fields.email.trim();
+  const message = fields.message.trim();
+
+  const body = [
+    `Hi Pawish,`,
+    ``,
+    message,
+    ``,
+    `—`,
+    name,
+    from,
+  ].join('\n');
+
+  return mailtoHref(toEmail, {
+    subject: `Portfolio message from ${name}`,
+    body,
+  });
 }
 
 export const portfolioMailto = {
@@ -19,4 +50,5 @@ export const portfolioMailto = {
       subject: 'Hey Pawish',
       body: 'Hi Pawish,\n\n',
     }),
+  contact: contactMailto,
 };

@@ -36,7 +36,7 @@ export const about = {
     { label: 'Main stack', value: 'Python, React, LLMs, agents' },
     { label: 'Focus now', value: 'Agents & automations' },
     { label: 'Published', value: '2 papers' },
-    { label: 'Location', value: 'India' },
+    { label: 'Location', value: 'Glasgow, UK' },
     { label: 'Availability', value: 'Open to work' },
   ],
 };

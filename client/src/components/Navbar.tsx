@@ -28,6 +28,15 @@ export function Navbar() {
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [open]);
+
   function sectionHref(hash: string) {
     return onHome ? hash : `/${hash}`;
   }

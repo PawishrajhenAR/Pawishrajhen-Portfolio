@@ -46,7 +46,7 @@ export function EmailLink({ variant = 'card', className = '', subject = 'general
             {site.email}
           </p>
           <p className="mt-2 text-[0.8rem] text-ink-soft">
-            Opens in your mail app — Gmail, Outlook, Apple Mail, whatever you use.
+            Opens your mail app with a draft ready to send.
           </p>
         </div>
       </div>

@@ -450,7 +450,7 @@
     transform-origin: center center;
   }
 
-  .projects-pin .ascii-art--project {
+  .project-ascii-accent .ascii-art--project {
     width: max-content;
     max-width: none;
     overflow: visible;
@@ -520,32 +520,6 @@
 
   .mobile-nav-link {
     touch-action: manipulation;
-  }
-
-  /* Pinned projects: solid panels + GPU layer — no blur repaint during horizontal move */
-  .projects-pin .box-cell-pinned {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-
-  .projects-pin .box-cell-pinned.box-cell {
-    @apply bg-surface/98;
-  }
-
-  .projects-pin .box-cell-pinned.box-cell-dark {
-    @apply bg-cream-dark/92;
-  }
-
-  .projects-pin .tag-pinned {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    @apply bg-surface/85;
-  }
-
-  .projects-track {
-    will-change: transform;
-    transform: translateZ(0);
-    backface-visibility: hidden;
   }
 
   .blog-filter {

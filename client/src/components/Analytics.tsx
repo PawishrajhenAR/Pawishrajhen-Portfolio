@@ -13,7 +13,7 @@ export function Analytics() {
     document.head.appendChild(script);
 
     return () => {
-      document.head.removeChild(script);
+      script.remove();
     };
   }, [domain]);
 

@@ -14,7 +14,7 @@ export function JsonLd({ data }: JsonLdProps) {
     document.head.appendChild(script);
 
     return () => {
-      document.head.removeChild(script);
+      script.remove();
     };
   }, [serialized]);
 

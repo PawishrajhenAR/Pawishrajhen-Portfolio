@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   filterPosts,
+  formatBlogDate,
   getPostBySlug,
   getRelatedPosts,
   getSortedPosts,
@@ -27,5 +28,9 @@ describe('blog helpers', () => {
     const related = getRelatedPosts('agent-loops-that-actually-stop');
     expect(related.length).toBeGreaterThan(0);
     expect(related.every((post) => post.slug !== 'agent-loops-that-actually-stop')).toBe(true);
+  });
+
+  it('formats calendar dates without timezone drift', () => {
+    expect(formatBlogDate('2026-06-26')).toBe('Jun 26, 2026');
   });
 });

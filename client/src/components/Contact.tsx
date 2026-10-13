@@ -1,51 +1,48 @@
 import { FormEvent, useState } from 'react';
-import { CheckCircle, Loader2 } from 'lucide-react';
+import { ExternalLink, Mail } from 'lucide-react';
 import { site } from '../data/content';
+import { contactMailto } from '../lib/mailto';
 import { AsciiSlot } from './AsciiSlot';
 import { EmailLink } from './EmailLink';
 import { Eyebrow } from './PageFrame';
-
-type FormState = 'idle' | 'loading' | 'success' | 'error';
 
 const inputClass =
   'w-full border border-border bg-cream/40 px-4 py-2.5 text-[0.9rem] text-ink backdrop-blur-sm placeholder:text-muted/70 focus:border-ink focus:outline-none';
 
 export function Contact() {
-  const [formState, setFormState] = useState<FormState>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setFormState('loading');
     setErrorMsg('');
 
     const form = e.currentTarget;
     const data = new FormData(form);
-    const payload = {
-      name: String(data.get('name') ?? '').trim(),
-      email: String(data.get('email') ?? '').trim(),
-      message: String(data.get('message') ?? '').trim(),
-    };
 
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      const body = await res.json();
-
-      if (!res.ok) {
-        throw new Error(body.error ?? 'Something went wrong — try again?');
-      }
-
-      setFormState('success');
-      form.reset();
-    } catch (err) {
-      setFormState('error');
-      setErrorMsg(err instanceof Error ? err.message : 'Failed to send.');
+    // Honeypot — bots that fill this get a silent no-op.
+    if (String(data.get('company_fax') ?? '').trim()) {
+      return;
     }
+
+    const name = String(data.get('name') ?? '').trim();
+    const email = String(data.get('email') ?? '').trim();
+    const message = String(data.get('message') ?? '').trim();
+
+    if (name.length < 2 || name.length > 100) {
+      setErrorMsg('Please enter your name (at least 2 characters).');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+      setErrorMsg('Please enter a valid email.');
+      return;
+    }
+    if (message.length < 10 || message.length > 2000) {
+      setErrorMsg('Message should be between 10 and 2000 characters.');
+      return;
+    }
+
+    const href = contactMailto(site.email, { name, email, message });
+    window.location.href = href;
   }
 
   return (
@@ -79,58 +76,77 @@ export function Contact() {
         </div>
 
         <div className="box-cell-dark">
-          {formState === 'success' ? (
-            <div className="flex flex-col items-start py-4">
-              <CheckCircle className="text-sage" size={28} strokeWidth={1.5} />
-              <h3 className="mt-5 font-display text-xl text-ink">Got it — thanks.</h3>
-              <p className="mt-2 text-[0.9rem] text-ink-soft">I&apos;ll reply soon.</p>
-              <button
-                type="button"
-                onClick={() => setFormState('idle')}
-                className="mt-6 text-[0.85rem] text-muted hover:text-ink"
-              >
-                Send another message
-              </button>
+          <form onSubmit={handleSubmit} className="relative space-y-4">
+            <div className="flex items-start gap-3 border border-border/70 bg-cream/25 px-3.5 py-3">
+              <Mail size={16} className="mt-0.5 shrink-0 text-muted" strokeWidth={1.5} aria-hidden />
+              <p className="text-[0.8rem] leading-relaxed text-ink-soft">
+                This opens your mail app with a draft to{' '}
+                <span className="text-ink">{site.email}</span>. You send it from your own inbox —
+                nothing is uploaded to a third-party mail service.
+              </p>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="name" className="mb-1.5 block text-[0.8rem] text-muted">
-                  Name
-                </label>
-                <input id="name" name="name" type="text" required minLength={2} maxLength={100} autoComplete="name" className={inputClass} />
-              </div>
-              <div>
-                <label htmlFor="email" className="mb-1.5 block text-[0.8rem] text-muted">
-                  Email
-                </label>
-                <input id="email" name="email" type="email" required autoComplete="email" className={inputClass} />
-              </div>
-              <div>
-                <label htmlFor="message" className="mb-1.5 block text-[0.8rem] text-muted">
-                  Message
-                </label>
-                <textarea id="message" name="message" required minLength={10} maxLength={2000} rows={4} className={`${inputClass} resize-none`} placeholder="What's on your mind?" />
-              </div>
-              {formState === 'error' && (
-                <p className="text-[0.85rem] text-rust">{errorMsg}</p>
-              )}
-              <button
-                type="submit"
-                disabled={formState === 'loading'}
-                className="btn-primary w-full justify-center disabled:opacity-60"
-              >
-                {formState === 'loading' ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />
-                    Sending…
-                  </>
-                ) : (
-                  'Send message'
-                )}
-              </button>
-            </form>
-          )}
+
+            {/* Honeypot — leave empty. Odd name avoids browser autofill. */}
+            <div aria-hidden="true" className="pointer-events-none absolute -left-[9999px] h-0 w-0 overflow-hidden opacity-0">
+              <label htmlFor="company_fax">Company fax</label>
+              <input
+                id="company_fax"
+                name="company_fax"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+            <div>
+              <label htmlFor="name" className="mb-1.5 block text-[0.8rem] text-muted">
+                Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                minLength={2}
+                maxLength={100}
+                autoComplete="name"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="mb-1.5 block text-[0.8rem] text-muted">
+                Your email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                maxLength={254}
+                autoComplete="email"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label htmlFor="message" className="mb-1.5 block text-[0.8rem] text-muted">
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                minLength={10}
+                maxLength={2000}
+                rows={4}
+                className={`${inputClass} resize-none`}
+                placeholder="What's on your mind?"
+              />
+            </div>
+            {errorMsg && <p className="text-[0.85rem] text-rust">{errorMsg}</p>}
+            <button type="submit" className="btn-primary w-full justify-center">
+              Open in mail app
+              <ExternalLink size={15} strokeWidth={1.75} aria-hidden />
+            </button>
+          </form>
         </div>
       </div>
     </section>

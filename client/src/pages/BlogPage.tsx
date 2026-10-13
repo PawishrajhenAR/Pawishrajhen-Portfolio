@@ -81,12 +81,13 @@ export function BlogPage() {
 
   function selectTag(tag: BlogTag) {
     setActiveTag(tag);
+    const next = new URLSearchParams(searchParams);
     if (tag === 'all') {
-      searchParams.delete('tag');
+      next.delete('tag');
     } else {
-      searchParams.set('tag', tag);
+      next.set('tag', tag);
     }
-    setSearchParams(searchParams, { replace: true });
+    setSearchParams(next, { replace: true });
   }
 
   return (
